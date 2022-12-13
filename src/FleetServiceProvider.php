@@ -1,6 +1,6 @@
 <?php
 
-namespace Xgbnl\Fleet\Providers;
+namespace Xgbnl\Fleet;
 
 use Illuminate\Support\ServiceProvider;
 use Xgbnl\Fleet\Commands\InstallCommand;

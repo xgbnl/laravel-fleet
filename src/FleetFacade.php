@@ -1,6 +1,6 @@
 <?php
 
-namespace Xgbnl\Fleet\Facades;
+namespace Xgbnl\Fleet;
 
 use Illuminate\Support\Facades\Facade;
 
