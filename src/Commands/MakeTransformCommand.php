@@ -4,7 +4,7 @@ namespace Xgbnl\Fleet\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 
-class TransformCommand extends GeneratorCommand
+class MakeTransformCommand extends GeneratorCommand
 {
     /**
      * The console command name.

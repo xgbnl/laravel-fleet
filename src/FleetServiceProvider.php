@@ -7,7 +7,7 @@ use Xgbnl\Fleet\Commands\InstallCommand;
 use Xgbnl\Fleet\Commands\MakeCacheCommand;
 use Xgbnl\Fleet\Commands\MakeObserverCommand;
 use Xgbnl\Fleet\Commands\MakeRepositoryCommand;
-use Xgbnl\Fleet\Commands\TransformCommand;
+use Xgbnl\Fleet\Commands\MakeTransformCommand;
 
  class FleetServiceProvider extends ServiceProvider
 {
@@ -15,7 +15,7 @@ use Xgbnl\Fleet\Commands\TransformCommand;
         InstallCommand::class,
         MakeCacheCommand::class,
         MakeRepositoryCommand::class,
-        TransformCommand::class,
+        MakeTransformCommand::class,
         MakeObserverCommand::class,
     ];
 
