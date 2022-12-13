@@ -9,7 +9,7 @@ use InvalidArgumentException;
 use Xgbnl\Fleet\Decorates\Factory\DecorateFactory;
 use Xgbnl\Fleet\Paginator\Paginator;
 
-class CustomMethods
+readonly class CustomMethods
 {
     /**
      * Custom return json

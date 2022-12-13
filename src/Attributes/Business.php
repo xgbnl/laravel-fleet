@@ -5,7 +5,7 @@ namespace Xgbnl\Fleet\Attributes;
 use Attribute;
 
 #[Attribute]
-class Business
+readonly class Business
 {
     public array|string $businessModels;
 

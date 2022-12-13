@@ -5,7 +5,7 @@ namespace Xgbnl\Fleet\Attributes;
 use Attribute;
 
 #[Attribute]
-class BusinessTag
+readonly class BusinessTag
 {
     public string $name;
 
