@@ -1,0 +1,37 @@
+{
+  "name": "xgbnl/laravel-fleet",
+  "description": "帮助开发者快速开发",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Xgbnl\\Fleet\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "files": [
+      "src/helpers.php"
+    ]
+  },
+  "authors": [
+    {
+      "name": "df",
+      "email": "745502274@qq.com"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "ext-redis": "*",
+    "ext-http": "*"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Xgbnl\\Fleet\\FleetServiceProvider"
+      ],
+      "aliases": {
+        "fleet": "Xgbnl\\Fleet\\FleetFacade"
+      }
+    }
+  }
+}

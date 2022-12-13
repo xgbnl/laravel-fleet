@@ -1,0 +1,15 @@
+<?php
+
+declare(strict_types=1);
+
+namespace DummyNamespace;
+
+use Xgbnl\Fleet\Contacts\Transform;
+
+class DummyClass implements Transform
+{
+    public function transformers(Model $model): array
+    {
+        // TO DO
+    }
+}

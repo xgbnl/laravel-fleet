@@ -1,0 +1,15 @@
+<?php
+
+declare(strict_types=1);
+
+namespace DummyNamespace;
+
+use Xgbnl\Fleet\Cache\Cacheable;
+
+class DummyClass extends Cacheable
+{
+    protected function configure(): void
+    {
+      // TODO: Implement configure() method.
+    }
+}
