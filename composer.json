@@ -1,6 +1,6 @@
 {
   "name": "xgbnl/laravel-fleet",
-  "description": "帮助开发者快速开发",
+  "description": "Help developers develop quickly",
   "type": "library",
   "license": "MIT",
   "autoload": {

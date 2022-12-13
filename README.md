@@ -1,6 +1,6 @@
 ## laravel-fleet
 
-> 帮助开发者快速开发👏
+> Help developers develop quickly🚀
 
 #### 环境及扩展要求
 
