@@ -16,9 +16,9 @@ use Xgbnl\Fleet\Paginator\Paginator;
  */
 abstract class CrudController extends AbstractController
 {
-    final protected function index(): JsonResponse
+     public function index(): JsonResponse
     {
-        $models = $this->repository->filterSearch($this->request->all());
+        $models = $this->repository->values($this->request->all());
 
         $pagesData = $this->customPaginate($models);
 

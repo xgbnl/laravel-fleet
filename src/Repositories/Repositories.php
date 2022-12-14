@@ -24,7 +24,7 @@ abstract class Repositories
     protected function dynamicGet(string $name): QueryBuilder|Transform
     {
         return match ($name) {
-            'rawQuery'  => $this->table
+            'rawQuery' => $this->table
                 ? DB::table($this->table)
                 : throw new \RuntimeException('获取数据表:[ ' . $this->table . ' ]错误', 500),
             'transform' => $this->getTransform(),
