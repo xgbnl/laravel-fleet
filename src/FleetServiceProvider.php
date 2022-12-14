@@ -9,7 +9,7 @@ use Xgbnl\Fleet\Commands\MakeObserverCommand;
 use Xgbnl\Fleet\Commands\MakeRepositoryCommand;
 use Xgbnl\Fleet\Commands\MakeTransformCommand;
 
- class FleetServiceProvider extends ServiceProvider
+class FleetServiceProvider extends ServiceProvider
 {
     protected array $commands = [
         InstallCommand::class,
@@ -27,7 +27,7 @@ use Xgbnl\Fleet\Commands\MakeTransformCommand;
     // Install BaseController
     protected function installCommand(array $commands): void
     {
-        $this->publishes([dirname(__DIR__) . '/Commands/Stubs/BaseController.stub' => app_path('Http/Controllers/BaseController.php')]);
+        $this->publishes([__DIR__ . '/Commands/Stubs/BaseController.stub' => app_path('Http/Controllers/BaseController.php')]);
         $this->commands($commands);
     }
 
