@@ -5,12 +5,9 @@ declare(strict_types=1);
 namespace DummyNamespace;
 
 use Illuminate\Database\Eloquent\Model;
-use Xgbnl\Fleet\Repositories\Repositories;
+use Xgbnl\Fleet\Repositories\Repository;
 
-class DummyClass extends Repositories
+class DummyClass extends Repository
 {
-     protected function doTransform(Model $model): array
-     {
-         // TODO: Implement doTransform() method.
-     }
+
 }
