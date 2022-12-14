@@ -19,5 +19,5 @@ abstract class Repository extends Repositories
         return $query;
     }
 
-    abstract public function values(array $columns = [], mixed $with = null, bool $thunk = false, int $count = 200): array;
+    abstract public function values(array $columns = [], mixed $with = null, bool $chunk = false, int $count = 200): array;
 }
