@@ -8,7 +8,7 @@ abstract class Repository extends Repositories
 {
     protected array $rules = [];
 
-    private function loadWith(mixed $with): Builder
+    final protected function loadWith(mixed $with): Builder
     {
         $query = (clone $this->query);
 
