@@ -24,7 +24,7 @@ abstract class Repositories
 
     private ?string $transformModel = null;
 
-    protected function dynamicGet(string $name): QueryBuilder|Transform
+    protected function dynamicGet(string $name): QueryBuilder|Transform|null
     {
         return match ($name) {
             'rawQuery' => $this->table
