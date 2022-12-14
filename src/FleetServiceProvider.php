@@ -24,7 +24,6 @@ class FleetServiceProvider extends ServiceProvider
         $this->installCommand($this->commands);
     }
 
-    // Install BaseController
     protected function installCommand(array $commands): void
     {
         $this->publishes([__DIR__ . '/Commands/Stubs/BaseController.stub' => app_path('Http/Controllers/BaseController.php')]);

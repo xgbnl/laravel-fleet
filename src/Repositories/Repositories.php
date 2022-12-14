@@ -6,12 +6,12 @@ namespace Xgbnl\Fleet\Repositories;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Xgbnl\Fleet\Enum\Sign;
 use Xgbnl\Fleet\Traits\CallMethodCollection;
 use Xgbnl\Fleet\Contacts\Transform;
 use Xgbnl\Fleet\Traits\BuilderGenerator;
 use Illuminate\Contracts\Database\Query\Builder as QueryBuilder;
-use Illuminate\Support\Facades\Log;
 
 /**
  * @property-read QueryBuilder $rawQuery
