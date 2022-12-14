@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * @property-read QueryBuilder $rawQuery
- * @property-read Transform $transform
+ * @property-read Transform|null $transform
  */
 abstract class Repositories
 {
@@ -34,7 +34,7 @@ abstract class Repositories
         };
     }
 
-    private function getTransform(): Transform
+    private function getTransform(): ?Transform
     {
         if (!is_null($this->transformModel)) {
             return app($this->transformModel);
@@ -45,7 +45,7 @@ abstract class Repositories
         $clazz = 'App\\Transforms\\' . $name . ucwords(Sign::Transform);
 
         if (!class_exists($clazz)) {
-            throw new \RuntimeException('缺少转换层模型[ ' . $name . ' ]', 500);
+            return null;
         }
 
         if (!is_subclass_of($clazz, Transform::class)) {
