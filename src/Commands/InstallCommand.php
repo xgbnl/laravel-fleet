@@ -18,7 +18,7 @@ class InstallCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Install business helper';
+    protected $description = 'Install laravel fleet';
 
     /**
      * Execute the console command.
@@ -28,7 +28,7 @@ class InstallCommand extends Command
     public function handle()
     {
         $this->call('vendor:publish', [
-            "--provider" => "Xgbnl\Fleet\Providers\BusinessServiceProvider"
+            "--provider" => "Xgbnl\Fleet\FleetServiceProvider"
         ]);
     }
 }
