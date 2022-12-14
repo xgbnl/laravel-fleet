@@ -12,6 +12,7 @@ use Xgbnl\Fleet\Traits\CallMethodCollection;
 use Xgbnl\Fleet\Contacts\Transform;
 use Xgbnl\Fleet\Traits\BuilderGenerator;
 use Illuminate\Contracts\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @property-read QueryBuilder $rawQuery
@@ -20,6 +21,8 @@ use Illuminate\Contracts\Database\Query\Builder as QueryBuilder;
 abstract class Repositories
 {
     use CallMethodCollection, BuilderGenerator;
+
+    private ?string $transformModel = null;
 
     protected function dynamicGet(string $name): QueryBuilder|Transform
     {
@@ -33,13 +36,13 @@ abstract class Repositories
 
     private function getTransform(): Transform
     {
-        if (!is_null($this->transform)) {
-            return $this->transform;
+        if (!is_null($this->transformModel)) {
+            return app($this->transformModel);
         }
 
-        $name = strEndWith(last(explode('\\', get_called_class())), ucwords(Sign::Transform));
+        $name = strEndWith(last(explode('\\', get_called_class())), ucwords(Sign::Repository));
 
-        $clazz = 'App\\Transforms\\' . $name;
+        $clazz = 'App\\Transforms\\' . $name . ucwords(Sign::Transform);
 
         if (!class_exists($clazz)) {
             throw new \RuntimeException('缺少转换层模型[ ' . $name . ' ]', 500);
@@ -50,6 +53,8 @@ abstract class Repositories
             Log::error($msg);
             throw new \RuntimeException($msg, 500);
         }
+
+        $this->transformModel = $clazz;
 
         try {
             $class = app($clazz);
