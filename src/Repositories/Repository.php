@@ -12,12 +12,8 @@ abstract class Repository extends Repositories
     {
         $query = (clone $this->query);
 
-        if (is_array($with) && !empty($with)) {
+        if ((is_array($with) && !empty($with)) || is_string($with)) {
             return $query->with($with);
-        }
-
-        if (is_string($with)) {
-            return $query->with($query);
         }
 
         return $query;
