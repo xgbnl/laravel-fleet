@@ -10,7 +10,7 @@ abstract class Repository extends Repositories
 
     final protected function loadWith(mixed $with): Builder
     {
-        $query = (clone $this->query);
+        $query = $this->query->clone();
 
         if ((is_array($with) && !empty($with)) || is_string($with)) {
             return $query->with($with);
