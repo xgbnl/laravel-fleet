@@ -7,6 +7,7 @@ use Xgbnl\Fleet\Commands\InstallCommand;
 use Xgbnl\Fleet\Commands\MakeCacheCommand;
 use Xgbnl\Fleet\Commands\MakeObserverCommand;
 use Xgbnl\Fleet\Commands\MakeRepositoryCommand;
+use Xgbnl\Fleet\Commands\MakeServiceCommand;
 use Xgbnl\Fleet\Commands\MakeTransformCommand;
 
 class FleetServiceProvider extends ServiceProvider
@@ -17,6 +18,7 @@ class FleetServiceProvider extends ServiceProvider
         MakeRepositoryCommand::class,
         MakeTransformCommand::class,
         MakeObserverCommand::class,
+        MakeServiceCommand::class,
     ];
 
     public function boot(): void
