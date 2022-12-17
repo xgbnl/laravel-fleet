@@ -16,7 +16,7 @@ use Xgbnl\Fleet\Paginator\Paginator;
  */
 abstract class CrudController extends AbstractController
 {
-     public function index(): JsonResponse
+    public function index(): JsonResponse
     {
         $models = $this->repository->values($this->request->all());
 
@@ -41,9 +41,9 @@ abstract class CrudController extends AbstractController
         return $this->store();
     }
 
-    public function destroy(int $id): JsonResponse
+    public function destroy(): JsonResponse
     {
-        $this->service->destroy($id);
+        $this->service->destroy($this->request->input('id'));
         return $this->json('删除成功', 204);
     }
 }
