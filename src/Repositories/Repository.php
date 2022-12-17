@@ -10,15 +10,6 @@ abstract class Repository extends Repositories
 {
     protected array $rules = [];
 
-    private array $queryRules = [
-        'like' => '%?%',
-        'suffix_like' => '%?',
-        'prefix_like' => '?%',
-        'date',
-        'in',
-        'not_in',
-    ];
-
     final public function values(array $columns = ['*'], array $params = [], mixed $with = null, bool $chunk = false, int $count = 200): array
     {
         $builder = $this->loadWith($with);
@@ -62,35 +53,37 @@ abstract class Repository extends Repositories
 
     final protected function query(array $params, Builder $builder): Builder
     {
+        if (count($params) === 1) {
+            $keys = array_keys($params);
+            $column = array_pop($keys);
+
+            return (isset($this->rules[$column]) && (is_string($this->rules[$column]) && !empty($this->rules[$column])))
+                ? $this->matchQuery($column, $params[$column], $this->rules[$column], $builder)
+                : $builder->where($params);
+        }
+
         foreach ($params as $column => $value) {
+
             if (isset($this->rules[$column])) {
-                $builder = match ($this->rules[$column]) {
-                    'like', 'suffix_like', 'prefix_like' => $builder->where(
-                        $this->rules[$column],
-                        $this->splice($this->queryRules[$this->rules[$column]], $value),
-                    ),
-                    'date' => $builder->whereDate($column, '>=', $value)
-                        ->orWhereDate($column, '<=', $value),
-                    'in' => $builder->whereIn($column, $value),
-                    'not_in' => $builder->whereNotIn($column, $value),
-                };
+                $builder = $this->matchQuery($column, $value, $this->rules[$column], $builder);
                 continue;
             }
             $builder = $builder->where($column, $value);
         }
+        unset($column, $value);
 
         return $builder;
     }
 
-    private function splice(string $rule, mixed $value): string
+    private function matchQuery(string $column, string $value, string $rule, Builder $builder): Builder
     {
-        $split = str_split($rule);
-
-        $index = array_search('?', $split);
-
-        array_splice($split, $index, 1, $value);
-
-        return implode('', $split);
+        return match ($rule) {
+            'like' => $builder->where($column, $rule, '%' . $value . '%'),
+            'date' => $builder->whereDate($column, '>=', $value)
+                ->orWhereDate($column, '<=', $value),
+            'in' => $builder->whereIn($column, $value),
+            'notin' => $builder->whereNotIn($column, $value),
+        };
     }
 
     private function loadWith(mixed $with): Builder
