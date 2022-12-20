@@ -18,7 +18,7 @@ abstract class Repository extends Repositories
             ? $builder->find($value, $columns)
             : $builder->select($columns)->where($by, $value)->first();
 
-        return $this->transform ? $this->transform->transformers($model) : $model;
+        return !is_null($model) ? $this->transform ? $this->transform->transformers($model) : $model : null;
     }
 
     final public function values(array $columns = ['*'], array $params = [], mixed $with = null, bool $chunk = false, int $count = 200): array
