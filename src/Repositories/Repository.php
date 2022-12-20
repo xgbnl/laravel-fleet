@@ -10,6 +10,17 @@ abstract class Repository extends Repositories
 {
     protected array $rules = [];
 
+    final public function find(mixed $value, array $columns = ['*'], string $by = 'id', mixed $with = []): array|Model|null
+    {
+        $builder = $this->loadWith($with);
+
+        $model = $by === 'id'
+            ? $builder->find($value, $columns)
+            : $builder->select($columns)->where($by, $value)->first();
+
+        return $this->transform ? $this->transform->transformers($model) : $model;
+    }
+
     final public function values(array $columns = ['*'], array $params = [], mixed $with = null, bool $chunk = false, int $count = 200): array
     {
         $builder = $this->loadWith($with);
@@ -54,7 +65,7 @@ abstract class Repository extends Repositories
     final protected function query(array $params, Builder $builder): Builder
     {
         if (count($params) === 1) {
-            $keys = array_keys($params);
+            $keys   = array_keys($params);
             $column = array_pop($keys);
 
             return (isset($this->rules[$column]) && (is_string($this->rules[$column]) && !empty($this->rules[$column])))
@@ -78,10 +89,10 @@ abstract class Repository extends Repositories
     private function matchQuery(string $column, string $value, string $rule, Builder $builder): Builder
     {
         return match ($rule) {
-            'like' => $builder->where($column, $rule, '%' . $value . '%'),
-            'date' => $builder->whereDate($column, '>=', $value)
+            'like'  => $builder->where($column, $rule, '%' . $value . '%'),
+            'date'  => $builder->whereDate($column, '>=', $value)
                 ->orWhereDate($column, '<=', $value),
-            'in' => $builder->whereIn($column, $value),
+            'in'    => $builder->whereIn($column, $value),
             'notin' => $builder->whereNotIn($column, $value),
         };
     }
