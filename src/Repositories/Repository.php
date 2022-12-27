@@ -30,7 +30,9 @@ abstract class Repository extends Repositories
         }
 
         if ($this->transform && $transform) {
-            return is_null($replaceCall) ? $this->transform->transformers($model) : $replaceCall($model);
+            return is_null($replaceCall)
+                ? $this->transform->transformers($model) :
+                $this->transform->{$replaceCall}($model);
         }
 
         return $model;
@@ -81,7 +83,7 @@ abstract class Repository extends Repositories
         $builder->select($columns)->chunkById($count, function (Collection $collection) use (&$list, $replaceCall) {
             $collection->each(function (Model $model) use (&$list, $replaceCall) {
                 $list [] = (is_null($this->transform) ? $model : is_null($replaceCall))
-                    ? $this->transform->transformers($model) : $replaceCall($model);
+                    ? $this->transform->transformers($model) : $this->transform->{$replaceCall}($model);
             });
         });
 
