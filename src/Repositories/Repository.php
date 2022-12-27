@@ -10,7 +10,14 @@ abstract class Repository extends Repositories
 {
     protected array $rules = [];
 
-    final public function find(mixed $value, array $columns = ['*'], string $by = 'id', mixed $with = [], bool $transform = false): array|Model|null
+    final public function find(
+        mixed   $value,
+        array   $columns = ['*'],
+        string  $by = 'id',
+        mixed   $with = [],
+        bool    $transform = false,
+        ?string $replaceCall = null,
+    ): array|Model|null
     {
         $builder = $this->loadWith($with);
 
@@ -18,10 +25,26 @@ abstract class Repository extends Repositories
             ? $builder->find($value, $columns)
             : $builder->select($columns)->where($by, $value)->first();
 
-        return !is_null($model) ? ($this->transform && $transform) ? $this->transform->transformers($model) : $model : null;
+        if (is_null($model)) {
+            return null;
+        }
+
+        if ($this->transform && $transform) {
+            return is_null($replaceCall) ? $this->transform->transformers($model) : $replaceCall($model);
+        }
+
+        return $model;
     }
 
-    final public function values(array $columns = ['*'], array $params = [], mixed $with = null, bool $transform = false, bool $chunk = false, int $count = 200): array
+    final public function values(
+        array   $columns = ['*'],
+        array   $params = [],
+        mixed   $with = null,
+        bool    $transform = false,
+        bool    $chunk = false,
+        int     $count = 200,
+        ?string $replaceCall = null,
+    ): array
     {
         $builder = $this->loadWith($with);
 
@@ -30,14 +53,16 @@ abstract class Repository extends Repositories
         }
 
         if ($chunk) {
-            return $this->chunk($columns, $count, $builder);
+            return $this->chunk($columns, $count, $builder, $replaceCall);
         }
 
         if ($this->transform && $transform) {
             $list = [];
 
-            $builder->select($columns)->each(function (Model $model) use (&$list) {
-                $list[] = $this->transform->transformers($model);
+            $builder->select($columns)->each(function (Model $model) use ($replaceCall, &$list) {
+                $list[] = is_null($replaceCall)
+                    ? $this->transform->transformers($model)
+                    : $this->transform->{$replaceCall}($model);
             });
 
             return $list;
@@ -46,16 +71,17 @@ abstract class Repository extends Repositories
         return $builder->select($columns)->get()->toArray();
     }
 
-    private function chunk(array $columns, int $count, Builder $builder): array
+    private function chunk(array $columns, int $count, Builder $builder, ?string $replaceCall): array
     {
         if ($builder->count() <= 0) {
             return [];
         }
 
         $list = [];
-        $builder->select($columns)->chunkById($count, function (Collection $collection) use (&$list) {
-            $collection->each(function (Model $model) use (&$list) {
-                $list [] = !$this->transform ? $model : $this->transform->transformers($model);
+        $builder->select($columns)->chunkById($count, function (Collection $collection) use (&$list, $replaceCall) {
+            $collection->each(function (Model $model) use (&$list, $replaceCall) {
+                $list [] = (is_null($this->transform) ? $model : is_null($replaceCall))
+                    ? $this->transform->transformers($model) : $replaceCall($model);
             });
         });
 
@@ -89,10 +115,10 @@ abstract class Repository extends Repositories
     private function matchQuery(string $column, string $value, string $rule, Builder $builder): Builder
     {
         return match ($rule) {
-            'like' => $builder->where($column, $rule, '%' . $value . '%'),
-            'date' => $builder->whereDate($column, '>=', $value)
+            'like'  => $builder->where($column, $rule, '%' . $value . '%'),
+            'date'  => $builder->whereDate($column, '>=', $value)
                 ->orWhereDate($column, '<=', $value),
-            'in' => $builder->whereIn($column, $value),
+            'in'    => $builder->whereIn($column, $value),
             'notin' => $builder->whereNotIn($column, $value),
         };
     }
