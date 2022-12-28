@@ -18,7 +18,9 @@ abstract class Cacheable
 
     final public function __construct(Repositories $repositories = null)
     {
-        $this->repositories = $repositories ?? $this->makeRepository();
+        $repositoryClass = $this->makeRepository();
+
+        $this->repositories = $repositoryClass ?? $repositories;
 
         $this->connectRedis(env('CACHEABLE', 'default'));
     }
@@ -84,7 +86,7 @@ abstract class Cacheable
         return (new static())->forget($key);
     }
 
-    private function makeRepository(): Repositories
+    private function makeRepository(): ?Repositories
     {
         $clazz = $this->customSubStr(get_class($this), '\\', true);
 
@@ -94,10 +96,6 @@ abstract class Cacheable
 
         $class = 'App\\Repositories\\' . $clazz . 'Repository';
 
-        if (!class_exists($class)) {
-            $this->trigger(500, '仓库模型[ ' . $clazz . ' ]不存在');
-        }
-
-        return app($class);
+        return !class_exists($class) ? null : app($class);
     }
 }
