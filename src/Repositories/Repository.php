@@ -55,7 +55,7 @@ abstract class Repository extends Repositories
         }
 
         if ($chunk) {
-            return $this->chunk($columns, $count, $builder, $replaceCall);
+            return $this->chunk($columns, $count, $builder, $transform, $replaceCall);
         }
 
         if ($this->transform && $transform) {
@@ -73,17 +73,21 @@ abstract class Repository extends Repositories
         return $builder->select($columns)->get()->toArray();
     }
 
-    private function chunk(array $columns, int $count, Builder $builder, ?string $replaceCall): array
+    private function chunk(array $columns, int $count, Builder $builder, bool $transform, ?string $replaceCall): array
     {
         if ($builder->count() <= 0) {
             return [];
         }
 
         $list = [];
-        $builder->select($columns)->chunkById($count, function (Collection $collection) use (&$list, $replaceCall) {
-            $collection->each(function (Model $model) use (&$list, $replaceCall) {
-                $list [] = (is_null($this->transform) ? $model : is_null($replaceCall))
-                    ? $this->transform->transformers($model) : $this->transform->{$replaceCall}($model);
+        $builder->select($columns)->chunkById($count, function (Collection $collection) use (&$list, $transform, $replaceCall) {
+            $collection->each(function (Model $model) use (&$list, $transform, $replaceCall) {
+
+                $list [] = (!is_null($this->transform) && $transform)
+                    ? (is_null($replaceCall)
+                        ? $this->transform->transformers($model)
+                        : $this->transform->{$replaceCall}($model))
+                    : $model;
             });
         });
 
