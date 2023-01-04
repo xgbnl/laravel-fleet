@@ -50,7 +50,7 @@ abstract class Repository extends Repositories
     {
         $builder = $this->loadWith($with);
 
-        if (!empty($params)) {
+        if (!empty($params = $this->filter($params))) {
             $builder = $this->query($params, $builder);
         }
 
